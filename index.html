@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sequence Alignment 101</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4F46E5',
+            secondary: '#818CF8',
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-primary text-white shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-2xl font-bold">Bioinformatics 101</h1>
+      <nav>
+        <ul class="flex space-x-6">
+          <li><a href="#intro" class="hover:underline">Introduction</a></li>
+          <li><a href="#concepts" class="hover:underline">Concepts</a></li>
+          <li><a href="#tool" class="hover:underline">Interactive Tool</a></li>
+          <li><a href="#applications" class="hover:underline">Applications</a></li>
+          <li><a href="#team" class="hover:underline">Our Team</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-r from-primary to-secondary text-white py-20">
+    <div class="container mx-auto text-center">
+      <h2 class="text-5xl font-extrabold mb-4">Master Sequence Alignment</h2>
+      <p class="text-lg mb-6">Interactive tools and practical examples to learn sequence alignment concepts effortlessly.</p>
+      <a href="#tool" class="px-8 py-4 bg-white text-primary font-semibold rounded-full shadow-lg hover:bg-gray-200">Get Started</a>
+    </div>
+  </section>
+
+  <!-- Introduction -->
+  <section id="intro" class="py-16 container mx-auto">
+    <div class="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-8">
+      <div class="md:w-1/2">
+        <h3 class="text-4xl font-bold mb-4">What is Sequence Alignment?</h3>
+        <p class="text-lg leading-relaxed text-gray-700">Sequence alignment is the process of arranging DNA, RNA, or protein sequences to identify regions of similarity that may indicate functional, structural, or evolutionary relationships.</p>
+        <a href="#concepts" class="mt-4 inline-block px-6 py-2 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-secondary">Learn More</a>
+      </div>
+      <div class="md:w-1/2">
+        <img src="images/alignment-example.jpg" alt="Sequence Alignment Example" class="rounded-lg shadow-lg">
+      </div>
+    </div>
+  </section>
+
+  <!-- Concepts Section -->
+  <section id="concepts" class="py-16 bg-gray-100">
+    <div class="container mx-auto text-center">
+      <h3 class="text-4xl font-bold mb-8">Core Concepts</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="p-6 bg-white shadow-lg rounded-lg">
+          <i class="fas fa-dna text-primary text-3xl mb-4"></i>
+          <h4 class="text-2xl font-semibold mb-2">Global Alignment</h4>
+          <p>Aligns sequences across their entire lengths, best for sequences of similar sizes.</p>
+        </div>
+        <div class="p-6 bg-white shadow-lg rounded-lg">
+          <i class="fas fa-vial text-primary text-3xl mb-4"></i>
+          <h4 class="text-2xl font-semibold mb-2">Local Alignment</h4>
+          <p>Focuses on aligning the most similar subregions, ideal for sequences of differing sizes.</p>
+        </div>
+        <div class="p-6 bg-white shadow-lg rounded-lg">
+          <i class="fas fa-chart-line text-primary text-3xl mb-4"></i>
+          <h4 class="text-2xl font-semibold mb-2">Scoring Matrices</h4>
+          <p>Used to calculate match, mismatch, and gap penalties in alignment algorithms.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Tool -->
+  <section id="tool" class="py-16">
+    <div class="container mx-auto">
+      <h3 class="text-4xl font-bold text-center mb-8">Interactive Sequence Alignment Tool</h3>
+      <div class="bg-white shadow-lg p-8 rounded-lg">
+        <p class="text-lg text-gray-700 mb-6">Enter two sequences to see a live alignment example.</p>
+        <div class="flex flex-col space-y-4">
+          <input type="text" id="sequence1" placeholder="Enter Sequence 1" class="p-3 border border-gray-300 rounded-lg focus:ring focus:ring-primary">
+          <input type="text" id="sequence2" placeholder="Enter Sequence 2" class="p-3 border border-gray-300 rounded-lg focus:ring focus:ring-primary">
+          <button onclick="alignSequences()" class="px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-secondary">Align</button>
+        </div>
+        <div id="result" class="mt-6 p-4 bg-gray-100 rounded-lg shadow-inner"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Applications -->
+  <section id="applications" class="py-16 bg-gray-100">
+    <div class="container mx-auto text-center">
+      <h3 class="text-4xl font-bold mb-8">Real-World Applications</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 bg-white shadow-lg rounded-lg">
+          <i class="fas fa-dna text-primary text-3xl mb-4"></i>
+          <h4 class="text-2xl font-semibold mb-2">Genomics</h4>
+          <p>Identify genetic variations and understand evolutionary patterns.</p>
+        </div>
+        <div class="p-6 bg-white shadow-lg rounded-lg">
+          <i class="fas fa-tree text-primary text-3xl mb-4"></i>
+          <h4 class="text-2xl font-semibold mb-2">Phylogenetics</h4>
+          <p>Determine evolutionary relationships between organisms.</p>
+        </div>
+        <div class="p-6 bg-white shadow-lg rounded-lg">
+          <i class="fas fa-flask text-primary text-3xl mb-4"></i>
+          <h4 class="text-2xl font-semibold mb-2">Proteomics</h4>
+          <p>Predict protein functions and discover functional domains.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section id="team" class="py-16">
+    <div class="container mx-auto text-center">
+      <h3 class="text-4xl font-bold mb-8">Meet Our Team</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white shadow-lg rounded-lg p-6">
+          <img src="images/team-member.jpg" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
+          <h4 class="text-2xl font-semibold mb-2">John Doe</h4>
+          <p>Bioinformatics Expert</p>
+        </div>
+        <div class="bg-white shadow-lg rounded-lg p-6">
+          <img src="images/team-member.jpg" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
+          <h4 class="text-2xl font-semibold mb-2">Jane Smith</h4>
+          <p>Developer</p>
+        </div>
+        <div class="bg-white shadow-lg rounded-lg p-6">
+          <img src="images/team-member.jpg" alt="Team Member" class="w-24 h-24 mx-auto rounded-full mb-4">
+          <h4 class="text-2xl font-semibold mb-2">Emily Clark</h4>
+          <p>UI/UX Designer</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-primary text-white py-6">
+    <div class="container mx-auto text
