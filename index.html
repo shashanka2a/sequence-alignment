@@ -150,4 +150,26 @@
 
   <!-- Footer -->
   <footer class="bg-primary text-white py-6">
-    <div class="container mx-auto text
+    <div class="container mx-auto text-center">
+      <p>&copy; 2024 Sequence Alignment 101. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    function alignSequences() {
+      const seq1 = document.getElementById('sequence1').value;
+      const seq2 = document.getElementById('sequence2').value;
+      const resultDiv = document.getElementById('result');
+
+      if (!seq1 || !seq2) {
+        resultDiv.textContent = "Please enter both sequences.";
+        return;
+      }
+
+      resultDiv.innerHTML = `<p class="text-gray-700">Aligned Sequences:</p><pre class="bg-gray-200 p-4 rounded-lg">${seq1}\n${seq2}</pre>`;
+    }
+  </script>
+
+</body>
+</html>
