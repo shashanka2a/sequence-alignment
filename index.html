@@ -84,54 +84,53 @@
     </div>
   </section>
 
-  <!-- Tool Section -->
-  <section class="py-10 container mx-auto">
-    <div class="bg-white shadow-md rounded-lg p-6">
-      <h2 class="text-xl font-bold mb-4 text-center">Experiment with Sequence Alignment</h2>
+<!-- Tool Section -->
+<section id="tool" class="py-10 container mx-auto">
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-2xl font-bold mb-6 text-center text-primary">Experiment with Sequence Alignment</h2>
 
-      <!-- Input Fields -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div>
-          <label class="block font-semibold mb-2">Sequence 1</label>
-          <input type="text" id="sequence1" class="w-full p-2 border rounded-lg" placeholder="Enter Sequence 1">
-        </div>
-        <div>
-          <label class="block font-semibold mb-2">Sequence 2</label>
-          <input type="text" id="sequence2" class="w-full p-2 border rounded-lg" placeholder="Enter Sequence 2">
-        </div>
-        <div class="grid grid-cols-3 gap-2">
-          <div>
-            <label class="block font-semibold mb-2">Match Score</label>
-            <input type="number" id="matchScore" value="20" class="w-full p-2 border rounded-lg">
-          </div>
-          <div>
-            <label class="block font-semibold mb-2">Mismatch Score</label>
-            <input type="number" id="mismatchScore" value="-10" class="w-full p-2 border rounded-lg">
-          </div>
-          <div>
-            <label class="block font-semibold mb-2">Gap Score</label>
-            <input type="number" id="gapScore" value="-20" class="w-full p-2 border rounded-lg">
-          </div>
-        </div>
+    <!-- Input Fields -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div>
+        <label class="block font-semibold mb-2">Sequence 1</label>
+        <input type="text" id="sequence1" class="w-full p-2 border rounded-lg" placeholder="Enter Sequence 1">
       </div>
-
-      <!-- Align Button -->
-      <div class="text-center mb-6">
-        <button onclick="alignSequences()" class="px-6 py-2 bg-primary text-white rounded-lg shadow-lg hover:bg-green-600">
-          Align Sequences
-        </button>
+      <div>
+        <label class="block font-semibold mb-2">Sequence 2</label>
+        <input type="text" id="sequence2" class="w-full p-2 border rounded-lg" placeholder="Enter Sequence 2">
       </div>
-
-      <!-- Results Section -->
-      <div id="results" class="text-center">
-        <!-- Alignment Visualization -->
-        <div id="alignment" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm font-mono"></div>
-
-        <!-- Score Visualization -->
-        <div id="scores" class="grid grid-cols-1 gap-4 text-sm font-mono mt-6"></div>
+      <div>
+        <label class="block font-semibold mb-2">Gap Penalty</label>
+        <input type="number" id="gapPenalty" class="w-full p-2 border rounded-lg" placeholder="e.g., -2" value="-2">
       </div>
     </div>
-  </section>
+
+    <!-- Alignment Type Selection -->
+    <div class="mb-6">
+      <label class="block font-semibold mb-2">Select Alignment Type</label>
+      <select id="alignmentType" class="w-full p-2 border rounded-lg">
+        <option value="global">Global Alignment (Needleman-Wunsch)</option>
+        <option value="local">Local Alignment (Smith-Waterman)</option>
+        <option value="dovetail">Dovetail Alignment</option>
+      </select>
+    </div>
+
+    <!-- Align Button -->
+    <div class="text-center mb-6">
+      <button onclick="runAlignment()" class="px-6 py-2 bg-primary text-white rounded-lg shadow-lg hover:bg-secondary">
+        Align Sequences
+      </button>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results" class="mt-6">
+      <h3 class="text-lg font-bold mb-4 text-center">Alignment Matrix</h3>
+      <div id="matrixContainer" class="overflow-auto mb-6"></div>
+      <div id="alignmentResult" class="text-center font-mono text-lg"></div>
+    </div>
+  </div>
+</section>
+
   
   <!-- Applications -->
   <section id="applications" class="py-16 bg-gray-100">
@@ -166,73 +165,143 @@
 
   <!-- JavaScript -->
   <script>
-function alignSequences() {
+  function runAlignment() {
   const seq1 = document.getElementById("sequence1").value.toUpperCase();
   const seq2 = document.getElementById("sequence2").value.toUpperCase();
-  const matchScore = parseInt(document.getElementById("matchScore").value);
-  const mismatchScore = parseInt(document.getElementById("mismatchScore").value);
-  const gapScore = parseInt(document.getElementById("gapScore").value);
+  const gapPenalty = parseInt(document.getElementById("gapPenalty").value);
+  const alignmentType = document.getElementById("alignmentType").value;
 
-  // Input validation
   if (!seq1 || !seq2) {
     alert("Please enter both sequences!");
     return;
   }
 
-  let alignment1 = [];
-  let alignment2 = [];
-  let scoreRow = [];
-  let cumulativeScore = 0;
+  if (alignmentType === "global") {
+    needlemanWunsch(seq1, seq2, gapPenalty);
+  } else if (alignmentType === "local") {
+    smithWaterman(seq1, seq2, gapPenalty);
+  } else if (alignmentType === "dovetail") {
+    dovetailAlignment(seq1, seq2, gapPenalty);
+  }
+}
 
-  for (let i = 0; i < Math.max(seq1.length, seq2.length); i++) {
-    const char1 = seq1[i] || "-";
-    const char2 = seq2[i] || "-";
+// Initialize a matrix with zeros
+function initializeMatrix(rows, cols) {
+  const matrix = [];
+  for (let i = 0; i < rows; i++) {
+    matrix.push(new Array(cols).fill(0));
+  }
+  return matrix;
+}
 
-    if (char1 === char2) {
-      alignment1.push(char1);
-      alignment2.push(char2);
-      scoreRow.push(matchScore);
-      cumulativeScore += matchScore;
-    } else if (char1 === "-" || char2 === "-") {
-      alignment1.push(char1);
-      alignment2.push(char2);
-      scoreRow.push(gapScore);
-      cumulativeScore += gapScore;
+// Display the matrix in the results section
+function displayMatrix(matrix, seq1, seq2) {
+  const container = document.getElementById("matrixContainer");
+  container.innerHTML = ""; // Clear previous content
+
+  let table = "<table class='table-auto border-collapse border border-gray-300 mx-auto'>";
+  table += "<tr><th></th><th></th>";
+
+  // Sequence 1 headers
+  for (let i = 0; i < seq1.length; i++) {
+    table += `<th class='border px-2 py-1'>${seq1[i]}</th>`;
+  }
+  table += "</tr>";
+
+  for (let i = 0; i < matrix.length; i++) {
+    table += "<tr>";
+    if (i === 0) {
+      table += `<th></th>`;
     } else {
-      alignment1.push(char1);
-      alignment2.push(char2);
-      scoreRow.push(mismatchScore);
-      cumulativeScore += mismatchScore;
+      table += `<th class='border px-2 py-1'>${seq2[i - 1]}</th>`;
+    }
+
+    for (let j = 0; j < matrix[i].length; j++) {
+      table += `<td class='border px-2 py-1 text-center'>${matrix[i][j]}</td>`;
+    }
+    table += "</tr>";
+  }
+
+  table += "</table>";
+  container.innerHTML = table;
+}
+
+// Needleman-Wunsch Algorithm (Global Alignment)
+function needlemanWunsch(seq1, seq2, gapPenalty) {
+  const rows = seq2.length + 1;
+  const cols = seq1.length + 1;
+  const matrix = initializeMatrix(rows, cols);
+
+  // Initialize first row and column with gap penalties
+  for (let i = 0; i < rows; i++) matrix[i][0] = i * gapPenalty;
+  for (let j = 0; j < cols; j++) matrix[0][j] = j * gapPenalty;
+
+  // Fill the matrix
+  for (let i = 1; i < rows; i++) {
+    for (let j = 1; j < cols; j++) {
+      const match = matrix[i - 1][j - 1] + (seq1[j - 1] === seq2[i - 1] ? 1 : -1);
+      const deleteGap = matrix[i - 1][j] + gapPenalty;
+      const insertGap = matrix[i][j - 1] + gapPenalty;
+      matrix[i][j] = Math.max(match, deleteGap, insertGap);
     }
   }
 
-  renderResults(alignment1, alignment2, scoreRow, cumulativeScore);
+  // Display the matrix
+  displayMatrix(matrix, seq1, seq2);
 }
 
-function renderResults(alignment1, alignment2, scoreRow, cumulativeScore) {
-  const alignmentDiv = document.getElementById("alignment");
-  const scoresDiv = document.getElementById("scores");
+// Smith-Waterman Algorithm (Local Alignment)
+function smithWaterman(seq1, seq2, gapPenalty) {
+  const rows = seq2.length + 1;
+  const cols = seq1.length + 1;
+  const matrix = initializeMatrix(rows, cols);
+  let maxScore = 0;
+  let maxPosition = [0, 0];
 
-  alignmentDiv.innerHTML = `
-    <div>
-      <strong>Sequence 1:</strong> ${alignment1.join(" ")}
-    </div>
-    <div>
-      <strong>Sequence 2:</strong> ${alignment2.join(" ")}
-    </div>
-  `;
+  // Fill the matrix
+  for (let i = 1; i < rows; i++) {
+    for (let j = 1; j < cols; j++) {
+      const match = matrix[i - 1][j - 1] + (seq1[j - 1] === seq2[i - 1] ? 1 : -1);
+      const deleteGap = matrix[i - 1][j] + gapPenalty;
+      const insertGap = matrix[i][j - 1] + gapPenalty;
+      matrix[i][j] = Math.max(0, match, deleteGap, insertGap);
 
-  scoresDiv.innerHTML = `
-    <div>
-      <strong>Scores:</strong> ${scoreRow.map((score, index) =>
-        `<span style="color:${score > 0 ? "green" : score < 0 ? "red" : "blue"};">${score}</span>`
-      ).join(" ")}
-    </div>
-    <div>
-      <strong>Cumulative Score:</strong> <span style="color:${cumulativeScore >= 0 ? "green" : "red"};">${cumulativeScore}</span>
-    </div>
-  `;
+      // Track the maximum score for backtracking
+      if (matrix[i][j] > maxScore) {
+        maxScore = matrix[i][j];
+        maxPosition = [i, j];
+      }
+    }
+  }
+
+  // Display the matrix
+  displayMatrix(matrix, seq1, seq2);
 }
+
+// Dovetail Alignment Algorithm
+function dovetailAlignment(seq1, seq2, gapPenalty) {
+  const rows = seq2.length + 1;
+  const cols = seq1.length + 1;
+  const matrix = initializeMatrix(rows, cols);
+
+  // Initialize first row and first column with zeros (no penalty at the ends)
+  for (let i = 0; i < rows; i++) matrix[i][0] = 0;
+  for (let j = 0; j < cols; j++) matrix[0][j] = 0;
+
+  // Fill the matrix
+  for (let i = 1; i < rows; i++) {
+    for (let j = 1; j < cols; j++) {
+      const match = matrix[i - 1][j - 1] + (seq1[j - 1] === seq2[i - 1] ? 1 : -1);
+      const deleteGap = matrix[i - 1][j] + gapPenalty;
+      const insertGap = matrix[i][j - 1] + gapPenalty;
+      matrix[i][j] = Math.max(match, deleteGap, insertGap);
+    }
+  }
+
+  // Display the matrix
+  displayMatrix(matrix, seq1, seq2);
+}
+
 
   </script>
 
