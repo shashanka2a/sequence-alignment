@@ -61,28 +61,67 @@
   </section>
 
   <!-- Concepts Section -->
-  <section id="concepts" class="py-16 bg-gray-100">
-    <div class="container mx-auto text-center">
-      <h3 class="text-4xl font-bold mb-8">Core Concepts</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="p-6 bg-white shadow-lg rounded-lg">
+<!-- Core Concepts Section -->
+<section id="concepts" class="py-16 bg-gray-100">
+  <div class="container mx-auto text-center">
+    <h3 class="text-4xl font-bold mb-8">Core Concepts</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      
+      <!-- Global Alignment -->
+      <div class="p-6 bg-white shadow-lg rounded-lg">
+        <button onclick="toggleSection('global')" class="w-full text-left">
           <i class="fas fa-dna text-primary text-3xl mb-4"></i>
           <h4 class="text-2xl font-semibold mb-2">Global Alignment</h4>
           <p>Aligns sequences across their entire lengths, best for sequences of similar sizes.</p>
+        </button>
+        <div id="global-details" class="hidden mt-4">
+          <p class="text-gray-700 mb-4">
+            Global alignment, implemented using the Needleman-Wunsch algorithm, compares sequences from start to end, ensuring alignment across their full length.
+          </p>
+          <div class="aspect-w-16 aspect-h-9 mb-4">
+            <iframe class="w-full rounded-lg" src="https://www.youtube.com/embed/MDV6nhY7Yd8" title="Global Alignment - Needleman-Wunsch Algorithm" allowfullscreen></iframe>
+          </div>
         </div>
-        <div class="p-6 bg-white shadow-lg rounded-lg">
+      </div>
+
+      <!-- Local Alignment -->
+      <div class="p-6 bg-white shadow-lg rounded-lg">
+        <button onclick="toggleSection('local')" class="w-full text-left">
           <i class="fas fa-vial text-primary text-3xl mb-4"></i>
           <h4 class="text-2xl font-semibold mb-2">Local Alignment</h4>
           <p>Focuses on aligning the most similar subregions, ideal for sequences of differing sizes.</p>
-        </div>
-        <div class="p-6 bg-white shadow-lg rounded-lg">
-          <i class="fas fa-chart-line text-primary text-3xl mb-4"></i>
-          <h4 class="text-2xl font-semibold mb-2">Scoring Matrices</h4>
-          <p>Used to calculate match, mismatch, and gap penalties in alignment algorithms.</p>
+        </button>
+        <div id="local-details" class="hidden mt-4">
+          <p class="text-gray-700 mb-4">
+            Local alignment, implemented using the Smith-Waterman algorithm, finds the most similar regions within sequences, making it useful for identifying conserved domains.
+          </p>
+          <div class="aspect-w-16 aspect-h-9 mb-4">
+            <iframe class="w-full rounded-lg" src="https://www.youtube.com/embed/v7RFBd9Rlhg" title="Local Alignment - Smith-Waterman Algorithm" allowfullscreen></iframe>
+          </div>
         </div>
       </div>
+
+      <!-- Dovetail Alignment -->
+      <div class="p-6 bg-white shadow-lg rounded-lg">
+        <button onclick="toggleSection('dovetail')" class="w-full text-left">
+          <i class="fas fa-chart-line text-primary text-3xl mb-4"></i>
+          <h4 class="text-2xl font-semibold mb-2">Dovetail Alignment</h4>
+          <p>Allows unpenalized gaps at the ends, useful for overlapping sequences.</p>
+        </button>
+        <div id="dovetail-details" class="hidden mt-4">
+          <p class="text-gray-700 mb-4">
+            Dovetail alignment aligns sequences by allowing gaps at the ends without penalties, useful in scenarios like genome assembly where overlapping regions are aligned.
+          </p>
+          <div class="aspect-w-16 aspect-h-9 mb-4">
+            <iframe class="w-full rounded-lg" src="https://www.youtube.com/embed/6B4NhFtkD_Y" title="Dovetail Alignment" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
+
 
 <!-- Tool Section -->
 <section id="tool" class="py-10 container mx-auto">
@@ -184,7 +223,18 @@
     dovetailAlignment(seq1, seq2, gapPenalty);
   }
 }
+  function toggleSection(sectionId) {
+    const section = document.getElementById(`${sectionId}-details`);
+    const allSections = document.querySelectorAll('[id$="-details"]');
 
+    allSections.forEach((sec) => {
+      if (sec !== section) {
+        sec.classList.add('hidden');
+      }
+    });
+
+    section.classList.toggle('hidden');
+  }
 // Initialize a matrix with zeros
 function initializeMatrix(rows, cols) {
   const matrix = [];
