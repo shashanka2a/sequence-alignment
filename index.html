@@ -194,8 +194,8 @@ function initializeMatrix(rows, cols) {
   return matrix;
 }
 
-// Display the matrix in the results section
-function displayMatrix(matrix, seq1, seq2) {
+// Display the matrix with highlighted backtracking path
+function displayMatrix(matrix, seq1, seq2, path = []) {
   const container = document.getElementById("matrixContainer");
   container.innerHTML = ""; // Clear previous content
 
@@ -217,13 +217,20 @@ function displayMatrix(matrix, seq1, seq2) {
     }
 
     for (let j = 0; j < matrix[i].length; j++) {
-      table += `<td class='border px-2 py-1 text-center'>${matrix[i][j]}</td>`;
+      const isPath = path.some(([row, col]) => row === i && col === j);
+      table += `<td class='border px-2 py-1 text-center ${isPath ? "bg-yellow-300" : ""}'>${matrix[i][j]}</td>`;
     }
     table += "</tr>";
   }
 
   table += "</table>";
   container.innerHTML = table;
+}
+
+// Display explanation below the matrix
+function displayExplanation(message) {
+  const explanation = document.getElementById("alignmentResult");
+  explanation.innerHTML = `<p class="mt-4 text-lg text-gray-700">${message}</p>`;
 }
 
 // Needleman-Wunsch Algorithm (Global Alignment)
@@ -246,8 +253,26 @@ function needlemanWunsch(seq1, seq2, gapPenalty) {
     }
   }
 
-  // Display the matrix
-  displayMatrix(matrix, seq1, seq2);
+  // Backtracking
+  let i = rows - 1;
+  let j = cols - 1;
+  const path = [];
+  while (i > 0 && j > 0) {
+    path.push([i, j]);
+    if (matrix[i][j] === matrix[i - 1][j - 1] + (seq1[j - 1] === seq2[i - 1] ? 1 : -1)) {
+      i--;
+      j--;
+    } else if (matrix[i][j] === matrix[i - 1][j] + gapPenalty) {
+      i--;
+    } else {
+      j--;
+    }
+  }
+  path.push([0, 0]);
+
+  // Display the matrix and explanation
+  displayMatrix(matrix, seq1, seq2, path);
+  displayExplanation("Global Alignment using the Needleman-Wunsch algorithm highlights the optimal alignment path through the entire matrix.");
 }
 
 // Smith-Waterman Algorithm (Local Alignment)
@@ -274,17 +299,33 @@ function smithWaterman(seq1, seq2, gapPenalty) {
     }
   }
 
-  // Display the matrix
-  displayMatrix(matrix, seq1, seq2);
+  // Backtracking from the maximum score
+  let [i, j] = maxPosition;
+  const path = [];
+  while (i > 0 && j > 0 && matrix[i][j] > 0) {
+    path.push([i, j]);
+    if (matrix[i][j] === matrix[i - 1][j - 1] + (seq1[j - 1] === seq2[i - 1] ? 1 : -1)) {
+      i--;
+      j--;
+    } else if (matrix[i][j] === matrix[i - 1][j] + gapPenalty) {
+      i--;
+    } else {
+      j--;
+    }
+  }
+
+  // Display the matrix and explanation
+  displayMatrix(matrix, seq1, seq2, path);
+  displayExplanation("Local Alignment using the Smith-Waterman algorithm highlights the optimal local alignment path.");
 }
 
-// Dovetail Alignment Algorithm
+// Dovetail Alignment
 function dovetailAlignment(seq1, seq2, gapPenalty) {
   const rows = seq2.length + 1;
   const cols = seq1.length + 1;
   const matrix = initializeMatrix(rows, cols);
 
-  // Initialize first row and first column with zeros (no penalty at the ends)
+  // Initialize the first row and column with zeros
   for (let i = 0; i < rows; i++) matrix[i][0] = 0;
   for (let j = 0; j < cols; j++) matrix[0][j] = 0;
 
@@ -298,9 +339,28 @@ function dovetailAlignment(seq1, seq2, gapPenalty) {
     }
   }
 
-  // Display the matrix
-  displayMatrix(matrix, seq1, seq2);
+  // Backtracking from the maximum value in the last row or column
+  let i = rows - 1;
+  let j = cols - 1;
+  const path = [];
+
+  while (i > 0 && j > 0) {
+    path.push([i, j]);
+    if (matrix[i][j] === matrix[i - 1][j - 1] + (seq1[j - 1] === seq2[i - 1] ? 1 : -1)) {
+      i--;
+      j--;
+    } else if (matrix[i][j] === matrix[i - 1][j] + gapPenalty) {
+      i--;
+    } else {
+      j--;
+    }
+  }
+
+  // Display the matrix and explanation
+  displayMatrix(matrix, seq1, seq2, path);
+  displayExplanation("Dovetail Alignment allows for unpenalized gaps at the ends, highlighting the optimal overlapping alignment path.");
 }
+
 
 
   </script>
