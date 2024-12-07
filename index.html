@@ -63,9 +63,13 @@
 <!-- Core Concepts Section -->
 <section id="concepts" class="py-16 bg-gray-100">
   <div class="container mx-auto text-center">
-    <h3 class="text-4xl font-bold mb-8">Core Concepts</h3>
+    <h3 class="text-4xl font-bold mb-8">Core Concepts of Sequence Alignment</h3>
+    <p class="text-lg mb-12 text-gray-700">
+      Understanding sequence alignment techniques is crucial in bioinformatics. Here are the key concepts explained in detail.
+    </p>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      
+
       <!-- Global Alignment -->
       <div class="p-6 bg-white shadow-lg rounded-lg">
         <button onclick="toggleSection('global')" class="w-full text-left">
@@ -73,12 +77,19 @@
           <h4 class="text-2xl font-semibold mb-2">Global Alignment</h4>
           <p>Aligns sequences across their entire lengths, best for sequences of similar sizes.</p>
         </button>
-        <div id="global-details" class="hidden mt-4">
+        <div id="global-details" class="hidden mt-4 text-left">
           <p class="text-gray-700 mb-4">
-            Global alignment, implemented using the Needleman-Wunsch algorithm, compares sequences from start to end, ensuring alignment across their full length.
+            **Global alignment** compares sequences from start to end, aligning their entire lengths. It's suitable for sequences of similar size and content. The **Needleman-Wunsch algorithm** is commonly used for global alignment.
           </p>
+          <p class="text-gray-700 mb-4">
+            This method ensures that the alignment spans the full length of both sequences, introducing gaps where necessary to optimize the alignment score.
+          </p>
+          <ul class="list-disc pl-5 mb-4 text-gray-600">
+            <li>Used in genome comparison between closely related species.</li>
+            <li>Helps identify overall sequence similarity.</li>
+          </ul>
           <div class="aspect-w-16 aspect-h-9 mb-4">
-            <iframe class="w-full rounded-lg" src="https://www.youtube.com/watch?v=LhpGz5--isw" title="Global Alignment - Needleman-Wunsch Algorithm" allowfullscreen></iframe>
+            <iframe class="w-full rounded-lg" src="https://www.youtube.com/embed/MDV6nhY7Yd8" title="Global Alignment - Needleman-Wunsch Algorithm" allowfullscreen></iframe>
           </div>
         </div>
       </div>
@@ -90,12 +101,19 @@
           <h4 class="text-2xl font-semibold mb-2">Local Alignment</h4>
           <p>Focuses on aligning the most similar subregions, ideal for sequences of differing sizes.</p>
         </button>
-        <div id="local-details" class="hidden mt-4">
+        <div id="local-details" class="hidden mt-4 text-left">
           <p class="text-gray-700 mb-4">
-            Local alignment, implemented using the Smith-Waterman algorithm, finds the most similar regions within sequences, making it useful for identifying conserved domains.
+            **Local alignment** identifies the most similar regions within two sequences. The **Smith-Waterman algorithm** is typically used for local alignment, making it ideal for sequences of different lengths.
           </p>
+          <p class="text-gray-700 mb-4">
+            This method is particularly useful for finding conserved domains or motifs within larger sequences.
+          </p>
+          <ul class="list-disc pl-5 mb-4 text-gray-600">
+            <li>Used in protein structure and function analysis.</li>
+            <li>Identifies matching regions within long sequences.</li>
+          </ul>
           <div class="aspect-w-16 aspect-h-9 mb-4">
-            <iframe class="w-full rounded-lg" src="https://www.youtube.com/watch?v=bFDRny7T3_s title="Local Alignment - Smith-Waterman Algorithm" allowfullscreen></iframe>
+            <iframe class="w-full rounded-lg" src="https://www.youtube.com/embed/v7RFBd9Rlhg" title="Local Alignment - Smith-Waterman Algorithm" allowfullscreen></iframe>
           </div>
         </div>
       </div>
@@ -107,12 +125,19 @@
           <h4 class="text-2xl font-semibold mb-2">Dovetail Alignment</h4>
           <p>Allows unpenalized gaps at the ends, useful for overlapping sequences.</p>
         </button>
-        <div id="dovetail-details" class="hidden mt-4">
+        <div id="dovetail-details" class="hidden mt-4 text-left">
           <p class="text-gray-700 mb-4">
-            Dovetail alignment aligns sequences by allowing gaps at the ends without penalties, useful in scenarios like genome assembly where overlapping regions are aligned.
+            **Dovetail alignment** allows gaps at the ends of sequences without penalties. This method is useful for aligning overlapping sequences, such as in genome assembly or when aligning sequence reads.
           </p>
+          <p class="text-gray-700 mb-4">
+            Unlike global alignment, dovetail alignment focuses on maximizing overlap between the sequences, ignoring mismatches or gaps at the ends.
+          </p>
+          <ul class="list-disc pl-5 mb-4 text-gray-600">
+            <li>Used in genome assembly to align overlapping reads.</li>
+            <li>Combines sequences that partially overlap.</li>
+          </ul>
           <div class="aspect-w-16 aspect-h-9 mb-4">
-            <iframe class="w-full rounded-lg" src="https://www.youtube.com/watch?v=8J3RiMhnmGA&t=192s" title="Dovetail Alignment" allowfullscreen></iframe>
+            <iframe class="w-full rounded-lg" src="https://www.youtube.com/embed/6B4NhFtkD_Y" title="Dovetail Alignment" allowfullscreen></iframe>
           </div>
         </div>
       </div>
@@ -120,6 +145,7 @@
     </div>
   </div>
 </section>
+
 <!-- Real-World Applications Section -->
 <section id="applications" class="py-16 bg-gray-100">
   <div class="container mx-auto text-center">
